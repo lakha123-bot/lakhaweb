@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌌 Cosmic Movie Search</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #00d0ff; /* Neon Blue */
+      --secondary-color: #ff00ff; /* Bright Magenta */
+      --background-dark: #121212;
+      --card-bg: rgba(255, 255, 255, 0.05);
+      --text-light: #f0f0f0;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, var(--background-dark), #000000);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-bottom: 50px; /* Footer space */
+    }
+
+    /* --- Heading Style --- */
+    h1 {
+      margin-top: 30px;
+      margin-bottom: 20px;
+      font-size: 2.2rem;
+      color: var(--primary-color);
+      text-align: center;
+      text-shadow: 0 0 10px rgba(0, 208, 255, 0.8), 0 0 20px rgba(0, 208, 255, 0.5);
+      letter-spacing: 1.5px;
+    }
+
+    /* --- Search Input Style --- */
+    .search-container {
+      margin: 20px 0;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 15px 20px;
+      font-size: 1rem;
+      border: 2px solid var(--primary-color);
+      border-radius: 30px; /* Pill shape */
+      outline: none;
+      background: var(--card-bg);
+      color: var(--text-light);
+      box-shadow: 0 0 15px rgba(0, 208, 255, 0.4);
+      transition: all 0.3s ease-in-out;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--secondary-color);
+      box-shadow: 0 0 25px rgba(255, 0, 255, 0.7);
+      transform: scale(1.02);
+    }
+
+    /* --- Movies Grid Style --- */
+    .movies {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      padding: 20px;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    .movie {
+      background: var(--card-bg);
+      border-radius: 15px;
+      overflow: hidden;
+      text-align: center;
+      border: 1px solid rgba(0, 208, 255, 0.2);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+      transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s;
+    }
+
+    .movie:hover {
+      transform: translateY(-10px) rotateZ(1deg);
+      box-shadow: 0 15px 30px rgba(0, 208, 255, 0.5), 0 0 40px rgba(255, 0, 255, 0.3);
+    }
+
+    .movie img {
+      width: 100%;
+      height: auto;
+      min-height: 350px;
+      object-fit: cover;
+      display: block;
+      border-bottom: 3px solid var(--primary-color);
+    }
+
+    .movie-info {
+      padding: 15px 10px;
+    }
+
+    .movie h2 {
+      margin: 5px 0 8px;
+      font-size: 1.3rem;
+      color: var(--primary-color);
+      text-transform: uppercase;
+    }
+
+    .movie p {
+      margin: 4px 0;
+      font-size: 0.95rem;
+      color: var(--text-light);
+    }
+
+    .movie strong {
+      color: var(--secondary-color);
+    }
+
+    .movie a {
+      color: var(--secondary-color);
+      text-decoration: none;
+      font-weight: bold;
+      display: inline-block;
+      margin-top: 10px;
+      padding: 5px 10px;
+      border: 1px solid var(--secondary-color);
+      border-radius: 5px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .movie a:hover {
+      background-color: var(--secondary-color);
+      color: var(--background-dark);
+    }
+
+    /* --- Status/Loading Message --- */
+    .status {
+      color: var(--primary-color);
+      font-size: 1.1rem;
+      margin-top: 20px;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.7; }
+      50% { opacity: 1; }
+      100% { opacity: 0.7; }
+    }
+    
+    /* --- Footer Style --- */
+    .footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      padding: 8px 0;
+      background: rgba(0, 0, 0, 0.8);
+      color: #999;
+      font-size: 0.8rem;
+      box-shadow: 0 -2px 10px rgba(0, 208, 255, 0.1);
+    }
+
+    .footer span {
+      color: var(--primary-color);
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    /* --- Mobile Optimization --- */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.8rem;
+        margin-top: 20px;
+      }
+      .movies {
+        grid-template-columns: 1fr; /* Single column on small screens */
+        gap: 15px;
+        padding: 10px;
+      }
+      .movie {
+        max-width: 350px;
+        margin: 0 auto;
+      }
+      input[type="text"] {
+        font-size: 0.9rem;
+        padding: 12px 18px;
+      }
+      .movie img {
+        min-height: 300px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <h1>✨ Cosmic Movie Search</h1>
+  <div class="search-container">
+    <input type="text" id="searchBox" placeholder="Type movie title, actor, or year..." />
+  </div>
+  <div id="status" class="status">Type something to search...</div>
+  <div class="movies" id="movies"></div>
+  
+  <div class="footer">
+    Created by <span>Lakha Rathod</span>
+  </div>
+
+  <script>
+    const searchBox = document.getElementById('searchBox');
+    const moviesContainer = document.getElementById('movies');
+    const status = document.getElementById('status');
+    let timeout = null;
+
+    searchBox.addEventListener('input', () => {
+      clearTimeout(timeout);
+      const query = searchBox.value.trim();
+      if (!query) {
+        moviesContainer.innerHTML = '';
+        status.textContent = 'Type something to search...';
+        status.classList.add('status'); // Ensure status class is present
+        return;
+      }
+      status.textContent = 'Searching...';
+      status.classList.add('status');
+      // Debounce the search to prevent excessive API calls
+      timeout = setTimeout(() => fetchMovies(query), 700);
+    });
+
+    async function fetchMovies(query) {
+      const apiUrl = `https://imdb.iamidiotareyoutoo.com/search?q=${encodeURIComponent(query)}`;
+      
+      // Function to display an error
+      const displayError = (message) => {
+        status.textContent = message;
+        status.classList.add('status');
+        moviesContainer.innerHTML = '';
+      };
+
+      try {
+        let res = await fetch(apiUrl);
+        if (!res.ok) {
+           // If direct fetch fails, try the proxy
+           throw new Error('Direct fetch failed, trying proxy.');
+        }
+        let data = await res.json();
+        displayMovies(data.description);
+      } catch (err) {
+        console.warn('Attempting proxy due to:', err.message || err);
+        try {
+          // Use AllOrigins proxy as a fallback
+          const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(apiUrl)}`;
+          const proxyRes = await fetch(proxyUrl);
+          
+          if (!proxyRes.ok) throw new Error('Proxy returned non-OK status');
+          
+          // Allorigins returns the actual JSON response as a string
+          const proxyText = await proxyRes.text();
+          const proxyData = JSON.parse(proxyText);
+          
+          displayMovies(proxyData.description);
+        } catch (proxyErr) {
+          console.error('Proxy failed too:', proxyErr);
+          displayError('❌ Unable to fetch data. Please try a different query or try again later.');
+        }
+      }
+    }
+
+    function displayMovies(movies) {
+      if (!movies || movies.length === 0) {
+        status.textContent = 'No movies found.';
+        moviesContainer.innerHTML = '';
+        return;
+      }
+      status.textContent = ''; // Clear status on success
+      moviesContainer.innerHTML = movies
+        .map(
+          (m) => {
+            // Check for missing data and use placeholders
+            const poster = m['#IMG_POSTER'] || 'https://via.placeholder.com/300x450?text=No+Poster';
+            const title = m['#TITLE'] || 'N/A';
+            const year = m['#YEAR'] || 'N/A';
+            const actors = m['#ACTORS'] || 'N/A';
+            const imdbUrl = m['#IMDB_URL'] || '#';
+
+            return `
+              <div class="movie">
+                <img src="${poster}" alt="${title} Poster" loading="lazy" />
+                <div class="movie-info">
+                  <h2>${title}</h2>
+                  <p><strong>Year:</strong> ${year}</p>
+                  <p><strong>Actors:</strong> ${actors}</p>
+                  <a href="${imdbUrl}" target="_blank" ${imdbUrl === '#' ? 'onclick="return false;"' : ''}>View Details</a>
+                </div>
+              </div>`;
+          }
+        )
+        .join('');
+    }
+  </script>
+</body>
+</html>
